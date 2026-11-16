@@ -3,6 +3,7 @@ name: Android CI
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 concurrency:
   group: android-ci-${{ github.ref }}
@@ -60,7 +61,7 @@ jobs:
 
     - name: Update AutoBuild Release
       run: |
-        LATEST_REL=$(gh release view --json tagName -q .tagName)
+        LATEST_REL=$(gh release view --json tagName -q .tagName 2>/dev/null || echo autobuild)
         GIT_DESCRIBE=$(git rev-parse --short HEAD)
         BUILD_TIME=$(TZ=UTC date --iso-8601=seconds)
         BUILD_TIME_TEXT=$(LC_ALL=C TZ=UTC date --date="$BUILD_TIME" '+%B %-d, %Y %H:%M')
